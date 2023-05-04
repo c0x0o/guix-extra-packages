@@ -1,0 +1,9 @@
+;; This file, which is best viewed as -*- Scheme -*-, lists the OpenPGP keys
+;; currently authorized to sign commits in this repository.
+
+(authorizations
+ (version 0)
+
+ (
+   ("0217 5B63 4E09 31AE 1435  99EF 62CB E6B9 0476 5EFA"
+   (name "lzy"))))
