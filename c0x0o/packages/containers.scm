@@ -1,5 +1,7 @@
 (define-module (c0x0o packages containers)
   #:use-module (guix build-system go)
+  #:use-module (guix build-system python)
+  #:use-module (guix download)
   #:use-module (guix gexp)
   #:use-module (guix git-download)
   #:use-module ((guix licenses) #:prefix license:)
@@ -7,12 +9,14 @@
   #:use-module (guix utils)
   #:use-module (gnu packages base)
   #:use-module ((gnu packages containers) #:prefix gnu-containers:)
+  #:use-module (gnu packages check)
   #:use-module (gnu packages glib)
   #:use-module (gnu packages gnupg)
   #:use-module (gnu packages golang)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages pkg-config)
-  #:use-module ((gnu packages virtualization) #:prefix gnu-virt:))
+  #:use-module (gnu packages python-xyz)
+  #:use-module (gnu packages virtualization))
 
 (define-public buildah
   (package
@@ -67,7 +71,7 @@
                   libassuan
                   libseccomp
                   lvm2
-                  gnu-virt:runc))
+                  runc))
     (native-inputs
      (list go-github-com-go-md2man
            gnu-make
@@ -103,3 +107,23 @@
                    ((docker (assoc-ref outputs "docker")))
                    (install-file "docker" (string-append docker "/bin"))))))))
       )))
+
+(define-public podman-compose
+  (package
+    (name "podman-compose")
+    (version "1.0.6")
+    (source (origin
+              (method url-fetch)
+              (uri (pypi-uri "podman-compose" version))
+              (sha256
+               (base32
+                "1rd29mysfdlbvn0m9zfyp2n0v5lch0bsj4fmzyjaal6akw23bcid"))))
+    (build-system python-build-system)
+    (arguments '(#:tests? #f))
+    (inputs (list python-pyyaml
+                  python-dotenv))
+    (home-page "https://github.com/containers/podman-compose")
+    (synopsis "An implementation of Compose Spec with Podman backend")
+    (description
+     "An implementation of Compose Spec with Podman backend")
+    (license license:gpl2)))
